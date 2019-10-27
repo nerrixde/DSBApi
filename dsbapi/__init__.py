@@ -4,32 +4,23 @@ import requests
 import datetime
 import io
 import gzip
+import uuid
 import base64
 
 class DSBApi:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0"
 
     def fetch_api(self):
-        s = requests.Session()
-        form_token_getter = s.request("GET", "https://www.dsbmobile.de/Login.aspx?ReturnUrl=/")
-        form_token_soup = bs4.BeautifulSoup(form_token_getter.text, "html.parser")
-        viewstate = form_token_soup.find("input", {"name":"__VIEWSTATE"})["value"]
-        viewstategenerator = form_token_soup.find("input", {"name":"__VIEWSTATEGENERATOR"})["value"]
-        eventvalidation = form_token_soup.find("input", {"name":"__EVENTVALIDATION"})["value"]
-        form_login_data = {"__LASTFOCUS":(None,""),"__VIEWSTATE":(None,viewstate),"__VIEWSTATEGENERATOR":(None,viewstategenerator),"__EVENTTARGET":(None,""),"__EVENTARGUMENT":(None,""),"__EVENTVALIDATION":(None,eventvalidation),"txtUser":(None,self.username),"txtPass":(None,self.password),"ctl03":(None,"Anmelden")}
-        s.request("POST", "https://www.dsbmobile.de/Login.aspx?ReturnUrl=/", files=form_login_data, headers = {'User-Agent': self.user_agent})
         current_time = datetime.datetime.now().isoformat()
         current_time = current_time.split(".")[0] + "." + current_time.split(".")[1][:3] + "Z"
-        innerDATA = {"UserId":"","UserPw":"","Abos":[],"AppVersion":"2.3","Language":"de","OsVersion":self.user_agent,"AppId":"","Device":"WebApp","PushId":"","BundleId":"de.heinekingmedia.inhouse.dsbmobile.web","Date":current_time,"LastUpdate":current_time}
+        innerDATA = {"UserId":self.username,"UserPw":self.password,"AppVersion":"2.5.9","Language":"de","OsVersion":"28 9.0","AppId":str(uuid.uuid4()),"Device":"SM-G935F","PushId":"","BundleId":"de.heinekingmedia.dsbmobile","Date":current_time,"LastUpdate":current_time}
         jsonStream = io.BytesIO()
         with gzip.open(filename=jsonStream, mode='wt') as streamReader:
             streamReader.write(json.dumps(innerDATA, separators=(',', ':')))
-        timetable_data = s.request("POST", "https://www.dsbmobile.de/JsonHandlerWeb.ashx/GetData", headers = {'User-Agent': self.user_agent, "Content-Type": "application/json;charset=utf-8", "Referer": "https://www.dsbmobile.de/default.aspx"}, json = {"req": {"Data": base64.encodebytes(jsonStream.getvalue()).decode("utf-8"), "DataType": 1}})
+        timetable_data = requests.request("POST", "https://app.dsbcontrol.de/JsonHandler.ashx/GetData", json = {"req": {"Data": base64.encodebytes(jsonStream.getvalue()).decode("utf-8"), "DataType": 1}})
         return json.loads(gzip.decompress(base64.b64decode(json.loads(timetable_data.text)["d"])))["ResultMenuItems"][0]["Childs"][0]["Root"]["Childs"][0]["Childs"][0]["Detail"]
-
 
     def fetch_entries(self):
         timetable = self.fetch_api()
