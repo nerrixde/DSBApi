@@ -7,9 +7,8 @@ import uuid
 import base64
 
 class DSBApi:
-    DATA_URL = "https://app.dsbcontrol.de/JsonHandler.ashx/GetData"
-    
     def __init__(self, username, password):
+        self.DATA_URL = "https://app.dsbcontrol.de/JsonHandler.ashx/GetData"
         self.username = username
         self.password = password
 
@@ -40,7 +39,7 @@ class DSBApi:
         
         # Send the request
         json_data = {"req": {"Data": params_compressed, "DataType": 1}}
-        timetable_data = requests.post(DSBApi.DATA_URL, json = json_data)
+        timetable_data = requests.post(self.DATA_URL, json = json_data)
         
         # Decompress response
         data_compressed = json.loads(timetable_data.content)["d"]
