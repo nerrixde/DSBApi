@@ -2,14 +2,13 @@ import bs4
 import json
 import requests
 import datetime
-import io
 import gzip
 import uuid
 import base64
 
-DATA_URL = "https://app.dsbcontrol.de/JsonHandler.ashx/GetData"
-
 class DSBApi:
+    DATA_URL = "https://app.dsbcontrol.de/JsonHandler.ashx/GetData"
+    
     def __init__(self, username, password):
         self.username = username
         self.password = password
@@ -36,12 +35,12 @@ class DSBApi:
             "LastUpdate": current_time
         }
         # Convert params into the right format
-        params_bytestring = json.dumps(params).encode("UTF-8")
+        params_bytestring = json.dumps(params, separators=(',', ':')).encode("UTF-8")
         params_compressed = base64.b64encode(gzip.compress(params_bytestring)).decode("UTF-8")
         
         # Send the request
         json_data = {"req": {"Data": params_compressed, "DataType": 1}}
-        timetable_data = requests.post(DATA_URL, json = json_data)
+        timetable_data = requests.post(DSBApi.DATA_URL, json = json_data)
         
         # Decompress response
         data_compressed = json.loads(timetable_data.content)["d"]
