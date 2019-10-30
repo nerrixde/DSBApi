@@ -15,7 +15,7 @@ class DSBApi:
     def fetch_api(self):
         current_time = datetime.datetime.now().isoformat()
         current_time = current_time.split(".")[0] + "." + current_time.split(".")[1][:3] + "Z"
-        innerDATA = {"UserId":self.username,"UserPw":self.password,"AppVersion":"2.5.9","Language":"de","OsVersion":"28 9.0","AppId":str(uuid.uuid4()),"Device":"SM-G935F","PushId":"","BundleId":"de.heinekingmedia.dsbmobile","Date":current_time,"LastUpdate":current_time}
+        innerDATA = {"UserId":self.username,"UserPw":self.password,"AppVersion":"2.5.9","Language":"de","OsVersion":"28 9","AppId":str(uuid.uuid4()),"Device":"SM-G935F","BundleId":"de.heinekingmedia.dsbmobile","Date":current_time,"LastUpdate":current_time}
         jsonStream = io.BytesIO()
         with gzip.open(filename=jsonStream, mode='wt') as streamReader:
             streamReader.write(json.dumps(innerDATA, separators=(',', ':')))
