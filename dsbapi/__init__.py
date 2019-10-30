@@ -20,8 +20,7 @@ class DSBApi:
         with gzip.open(filename=jsonStream, mode='wt') as streamReader:
             streamReader.write(json.dumps(innerDATA, separators=(',', ':')))
         timetable_data = requests.request("POST", "https://app.dsbcontrol.de/JsonHandler.ashx/GetData", json = {"req": {"Data": base64.encodebytes(jsonStream.getvalue()).decode("utf-8"), "DataType": 1}})
-        return json.loads(gzip.decompress(base64.b64decode(json.loads(timetable_data.text)["d"])))["ResultMenuItems"][0]["Childs"][0]["Root"]["Childs"][0]["Childs"][0]["Detail"]
-
+        return [o["Root"]["Childs"][0]["Childs"][0]["Detail"] for o in json.loads(gzip.decompress(base64.b64decode(json.loads(timetable_data.text)["d"])))["ResultMenuItems"][0]["Childs"] if o["MethodName"] == "timetable"][0]
     def fetch_entries(self):
         timetable = self.fetch_api()
         results = []

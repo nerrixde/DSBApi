@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dsbapipy",
-    version="0.0.4",
+    version="0.0.5",
     author="nerrixDE",
     author_email="nerrixde@mailfence.com",
     description="API fuer die DSBMobile Vertretungsplan-App",
