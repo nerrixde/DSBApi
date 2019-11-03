@@ -56,11 +56,16 @@ class DSBApi:
                             final.append(child["Childs"]["Detail"])
         if not final:
             raise Exception("Timetable data could not be found")
+        output = []
         for entry in final:
             if entry.endswith(".htm") and not entry.endswith(".html") and not entry.endswith("news.htm"):
-                return self.fetch_timetable(entry)
+                output.append(self.fetch_timetable(entry))
             elif entry.endswith(".jpg"):
-                return self.fetch_img(entry)
+                output.append(self.fetch_img(entry))
+        if len(output) == 1:
+            return output[0]
+        else:
+            return output
     def fetch_img(self, imgurl):
         return imgurl # TODO: Implement OCR
     def fetch_timetable(self, timetableurl):
