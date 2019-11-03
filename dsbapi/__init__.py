@@ -14,12 +14,12 @@ class DSBApi:
 
     # Sends a data request to the server.
     # Returns the URL to the timetable HTML page
-    def fetch_api(self):
+    def fetch_entries(self):
         # Iso format is for example 2019-10-29T19:20:31.875466
         current_time = datetime.datetime.now().isoformat()
         # Cut off last 3 digits and add 'Z' to get correct format
         current_time = current_time[:-3] + "Z"
-        
+
         # Parameters required for the server to accept our data request
         params = {
             "UserId": self.username,
@@ -36,26 +36,33 @@ class DSBApi:
         # Convert params into the right format
         params_bytestring = json.dumps(params, separators=(',', ':')).encode("UTF-8")
         params_compressed = base64.b64encode(gzip.compress(params_bytestring)).decode("UTF-8")
-        
+
         # Send the request
         json_data = {"req": {"Data": params_compressed, "DataType": 1}}
         timetable_data = requests.post(self.DATA_URL, json = json_data)
-        
+
         # Decompress response
         data_compressed = json.loads(timetable_data.content)["d"]
         data = json.loads(gzip.decompress(base64.b64decode(data_compressed)))
-        
-        # Find the timetable page, and extract the timetable URL from it
-        for page in data["ResultMenuItems"][0]["Childs"]:
-            if page["MethodName"] == "timetable":
-                return page["Root"]["Childs"][0]["Childs"][0]["Detail"]
-        
-        raise RuntimeException("Timetable data could not be found")
 
-    def fetch_entries(self):
-        timetable = self.fetch_api()
+        # Find the timetable page, and extract the timetable URL from it
+        final = []
+        for page in data["ResultMenuItems"][0]["Childs"]:
+                for child in page["Root"]["Childs"]:
+                        if isinstance(child["Childs"], list):
+                            for sub_child in child["Childs"]:
+                                final.append(sub_child["Detail"])
+                        else:
+                            final.append(child["Childs"]["Detail"])
+        if not final:
+            raise Exception("Timetable data could not be found")
+        for entry in final:
+            if entry.endswith(".htm") and not entry.endswith(".html") and not entry.endswith("news.htm"):
+                return self.fetch_timetable(entry)
+
+    def fetch_timetable(self, timetableurl):
         results = []
-        sauce = requests.get(timetable).text
+        sauce = requests.get(timetableurl).text
         soupi = bs4.BeautifulSoup(sauce, "html.parser")
         ind = -1
         for soup in soupi.find_all('table', {'class': 'mon_list'}):
@@ -84,4 +91,3 @@ class DSBApi:
                         "updated": updates}
                     results.append(new_entry)
         return results
-
