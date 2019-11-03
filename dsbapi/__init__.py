@@ -59,7 +59,10 @@ class DSBApi:
         for entry in final:
             if entry.endswith(".htm") and not entry.endswith(".html") and not entry.endswith("news.htm"):
                 return self.fetch_timetable(entry)
-
+            elif entry.endswith(".jpg"):
+                return self.fetch_img(entry)
+    def fetch_img(self, imgurl):
+        return imgurl # TODO: Implement OCR
     def fetch_timetable(self, timetableurl):
         results = []
         sauce = requests.get(timetableurl).text
