@@ -26,7 +26,7 @@ class DSBApi:
             "UserPw": self.password,
             "AppVersion": "2.5.9",
             "Language": "de",
-            "OsVersion": "28 9",
+            "OsVersion": "28 8.0",
             "AppId": str(uuid.uuid4()),
             "Device": "SM-G935F",
             "BundleId": "de.heinekingmedia.dsbmobile",
