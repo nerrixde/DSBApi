@@ -15,6 +15,7 @@ oder manuell vom Source Code.
 
 | Key | Value | Notiz |
 | --- | ---   | ---   |
+| `type` | `Vertretung` | Art des Eintrags |
 | `class` | `5D`  | Klasse |
 | `lesson` | `12`  | Schulstunde |
 | `room` | `R404`  | (Neuer) Raum |
