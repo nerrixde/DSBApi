@@ -28,7 +28,7 @@ class DSBApi:
             "Language": "de",
             "OsVersion": "28 8.0",
             "AppId": str(uuid.uuid4()),
-            "Device": "SM-G935F",
+            "Device": "SM-G930F",
             "BundleId": "de.heinekingmedia.dsbmobile",
             "Date": current_time,
             "LastUpdate": current_time
