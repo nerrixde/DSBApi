@@ -5,13 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dsbapipy",
-    version="0.0.11",
-    author="nerrixDE",
-    author_email="nerrixde@mailfence.com",
+    version="0.0.11-aschuma",
+    author="nerrixDE/aschuma",
     description="API fuer die DSBMobile Vertretungsplan-App",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/nerrixDE/DSBApi",
+    url="https://github.com/aschuma/DSBApi",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

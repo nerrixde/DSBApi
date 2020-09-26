@@ -81,21 +81,56 @@ class DSBApi:
             day = titles.split(" ")[1].split(", ")[0].replace(",", "")
             entries = soup.find_all("tr")
             entries.pop(0)
+
+            current_class = None
+            
             for entry in entries:
-                infos = entry.find_all("td")
+                infos = entry.find_all("td")            
                 if len(infos) < 2:
+                    current_class = infos[0].text
                     continue
-                for class_ in infos[1].text.split(", "):
-                    new_entry = {"type": infos[0].text if infos[0].text != "\xa0" else "---",
-                        "class": class_ if infos[1].text != "\xa0" else "---",
-                        "lesson": infos[2].text if infos[2].text != "\xa0" else "---",
-                        "room": infos[4].text if infos[4].text != "\xa0" else "---",
-                        "new_subject": infos[5].text if infos[5].text != "\xa0" else "---",
-                        "subject": infos[3].text if infos[3].text != "\xa0" else "---",
-                        "new_teacher": infos[6].text if infos[6].text != "\xa0" and infos[6].text != "+" else "---",
-                        "teacher": infos[7].text if infos[7].text != "\xa0" and infos[7].text != "+" else "---",
-                        "date": date,
-                        "day": day,
-                        "updated": updates}
-                    results.append(new_entry)
+                if len(infos) <= 10:
+                    for class_ in current_class.split(", "):
+                        row_cell_name = [
+                            "class", 
+                            "date", 
+                            "day", 
+                            "updated",                             
+                            "x_date",
+                            "x_day",
+                            "subject",
+                            "lesson",
+                            "teacher",
+                            "text",
+                            "room",
+                            "new_subject",
+                            "type",
+                            "info"]                            
+                        row_cell_data = [class_, date, day, updates] + [item.text.replace("\xa0","").replace("---","") for item in infos]
+                        new_entry = dict(zip(row_cell_name,row_cell_data))                        
+                        # print(new_entry)
+                        results.append(new_entry)  
+                if len(infos) > 10:    
+                    for class_ in current_class.split(", "):                                                
+                        row_cell_name = [
+                            "class", 
+                            "date", 
+                            "day", 
+                            "updated",                             
+                            "x_date",
+                            "x_day",
+                            "x_class",
+                            "subject",
+                            "lesson",
+                            "teacher",
+                            "text",
+                            "room",
+                            "new_subject",
+                            "new_teacher",
+                            "type",
+                            "info"]
+                        row_cell_data = [class_, date, day, updates] + [item.text.replace("\xa0","").replace("---","") for item in infos]
+                        new_entry = dict(zip(row_cell_name,row_cell_data))
+                        # print(new_entry)
+                        results.append(new_entry)  
         return results
