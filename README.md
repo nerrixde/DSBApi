@@ -3,9 +3,10 @@
 > Eine API für die DSBMobile Vertretungsplan-Lösung, welche viele Schulen benutzen.
 
 * Python 3
-* Funktioniert Stand 03.06.2020 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
+* Funktioniert Stand 02.10.2020 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
 * Aktuell in Version 0.0.11
-* Aktuell nicht stable, das Encoding muss noch angepasst werden.
+* Aktuell stable
+* Units 2020 nicht vollständig unterstützt, PRs welcome, aber Kompatibilität berücksichtigen!
 ### Installation:
 ```pip3 install dsbapipy```
 
