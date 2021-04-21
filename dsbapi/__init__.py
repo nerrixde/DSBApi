@@ -45,6 +45,10 @@ class DSBApi:
         data_compressed = json.loads(timetable_data.content)["d"]
         data = json.loads(gzip.decompress(base64.b64decode(data_compressed)))
 
+        # validate response before proceed
+        if data['Resultcode'] != 0:
+            raise Exception(data['ResultStatusInfo'])
+        
         # Find the timetable page, and extract the timetable URL from it
         final = []
         for page in data["ResultMenuItems"][0]["Childs"]:
