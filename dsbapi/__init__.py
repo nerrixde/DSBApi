@@ -7,14 +7,28 @@ import uuid
 import base64
 
 class DSBApi:
-    def __init__(self, username, password):
+    def __init__(self, username, password, tablemapper=['type','class','lesson','subject','room','new_subject','new_teacher','teacher']):
+        """
+        Class constructor for class DSBApi
+        @param username: string, the username of the DSBMobile account
+        @param password: string, the password of the DSBMobile account
+        @param tablemapper: list, the field mapping of the DSBMobile tables (default: ['type','class','lesson','subject','room','new_subject','new_teacher','teacher'])
+        @return: class
+        @raise TypeError: If the attribute tablemapper is not of type list
+        """
         self.DATA_URL = "https://app.dsbcontrol.de/JsonHandler.ashx/GetData"
         self.username = username
         self.password = password
+        if not isinstance(tablemapper, list):
+            raise TypeError('Attribute tablemapper is not of type list!')
+        self.tablemapper = tablemapper
 
-    # Sends a data request to the server.
-    # Returns the URL to the timetable HTML page
     def fetch_entries(self):
+        """
+        Fetch all the DSBMobile entries
+        @return: list, containing lists of DSBMobile entries from the tables or only the entries if just one table was received (default: empty list)
+        @rais Exception: If the request to DSBMonile failed
+        """
         # Iso format is for example 2019-10-29T19:20:31.875466
         current_time = datetime.datetime.now().isoformat()
         # Cut off last 3 digits and add 'Z' to get correct format
@@ -71,8 +85,21 @@ class DSBApi:
         else:
             return output
     def fetch_img(self, imgurl):
-        return imgurl # TODO: Implement OCR
+        """
+        Extract data from the image
+        @param imgurl: string, the URL to the image
+        @return: list, list of dicts
+        @todo: Future use - implement OCR
+        @rais Exception: If the function will be crawled, because the funbtion is not implemented yet
+        """
+        raise Exception('Extraction of data from images is not implemented yet!')
+        return(list(dict()))
     def fetch_timetable(self, timetableurl):
+        """
+        parse the timetableurl HTML page and return the parsed entries
+        @param timetableurl: string, the URL to the timetable in HTML format
+        @return: list, list of dicts
+        """
         results = []
         sauce = requests.get(timetableurl).text
         soupi = bs4.BeautifulSoup(sauce, "html.parser")
@@ -90,16 +117,17 @@ class DSBApi:
                 if len(infos) < 2:
                     continue
                 for class_ in infos[1].text.split(", "):
-                    new_entry = {"type": infos[0].text if infos[0].text != "\xa0" else "---",
-                        "class": class_ if infos[1].text != "\xa0" else "---",
-                        "lesson": infos[2].text if infos[2].text != "\xa0" else "---",
-                        "room": infos[4].text if infos[4].text != "\xa0" else "---",
-                        "new_subject": infos[5].text if infos[5].text != "\xa0" else "---",
-                        "subject": infos[3].text if infos[3].text != "\xa0" else "---",
-                        "new_teacher": infos[6].text if infos[6].text != "\xa0" and infos[6].text != "+" else "---",
-                        "teacher": infos[7].text if infos[7].text != "\xa0" and infos[7].text != "+" else "---",
-                        "date": date,
-                        "day": day,
-                        "updated": updates}
+                    new_entry = dict()
+                    new_entry["date"] = date
+                    new_entry["day"]  = day
+                    new_entry["updated"] = updates
+                    i = 0
+                    while i < len(infos):
+                        if i < len(self.tablemapper):
+                            attribute = self.tablemapper[i]
+                        else:
+                            attribute = 'col' + str(i)
+                        i += 1
+                        new_entry[attribute] = infos[i].text if infos[0].text != "\xa0" else "---"
                     results.append(new_entry)
         return results
