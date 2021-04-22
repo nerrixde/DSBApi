@@ -127,7 +127,7 @@ class DSBApi:
                             attribute = self.tablemapper[i]
                         else:
                             attribute = 'col' + str(i)
+                        new_entry[attribute] = infos[i].text if infos[i].text != "\xa0" else "---"
                         i += 1
-                        new_entry[attribute] = infos[i].text if infos[0].text != "\xa0" else "---"
                     results.append(new_entry)
         return results
