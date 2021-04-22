@@ -90,7 +90,7 @@ class DSBApi:
         @param imgurl: string, the URL to the image
         @return: list, list of dicts
         @todo: Future use - implement OCR
-        @rais Exception: If the function will be crawled, because the funbtion is not implemented yet
+        @raise Exception: If the function will be crawled, because the funbtion is not implemented yet
         """
         raise Exception('Extraction of data from images is not implemented yet!')
         return(list(dict()))
