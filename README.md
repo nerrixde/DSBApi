@@ -4,7 +4,7 @@
 
 * Python 3
 * Funktioniert Stand 02.10.2020 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
-* Aktuell in Version 0.0.11
+* Aktuell in Version 0.0.13
 * Aktuell stable
 * Units 2020 nicht vollständig unterstützt, PRs welcome, aber Kompatibilität berücksichtigen!
 ### Installation:
@@ -30,10 +30,25 @@ oder manuell vom Source Code.
 
 ### Implementierung:
 
+#### Beispiel 1
+
 ```py
 import dsbapi
 
 dsbclient = dsbapi.DSBApi("username", "password")
+entries = dsbclient.fetch_entries() # Rückgabe einer JSON Liste an Arrays
+print(entries[0]["date"]) # Datum des ersten Eintrags
+```
+
+#### Beispiel 2: Anderes Tabellenformat
+Schulen sind relativ frei in der Gestaltung Ihrer Datensätze. Daher kann der oben beschriebene Standard wiefolgt überschrieben werden:
+
+```py
+import dsbapi
+
+ownFields = ['class','lesson','new_subject','room','subject','new_teacher','type','text']
+
+dsbclient = dsbapi.DSBApi("username", "password", tablemapper=ownFields)
 entries = dsbclient.fetch_entries() # Rückgabe einer JSON Liste an Arrays
 print(entries[0]["date"]) # Datum des ersten Eintrags
 ```
