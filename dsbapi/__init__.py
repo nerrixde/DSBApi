@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+DSBApi
+An API for the DSBMobile substitution plan solution, which many schools use.
+"""
+__version__ = '0.0.13'
 import bs4
 import json
 import requests
