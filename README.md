@@ -4,14 +4,18 @@
 
 * Python 3
 * Funktioniert Stand 02.10.2020 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
-* Aktuell in Version 0.0.13
+* Aktuell in Version 0.0.14
 * Aktuell stable
 * Units 2020 nicht vollständig unterstützt, PRs welcome, aber Kompatibilität berücksichtigen!
-### Installation:
-```pip3 install dsbapipy```
+
+## Installation:
+
+`pip3 install dsbapipy`
 
 oder manuell vom Source Code.
-### Datensatz:
+
+## Datensatz:
+
 > JSON Liste an Arrays. Ein Array sieht so aus:
 
 | Key | Value | Notiz |
@@ -28,9 +32,15 @@ oder manuell vom Source Code.
 | `day` | `Montag`  | Wochentag |
 | `updated` | `02.02.2019 12:13`  | Letztes Update |
 
-### Implementierung:
+## Hinweise zum Key "class"
 
-#### Beispiel 1
+Der key "class" wird speziell behandelt, indem der Inhalt der Schulklasse bei der Zeichenfolge "`, `" geteilt wird.
+Diese Teilung wird verwendet um bei kombinierten Klasseneinträgen, die Daten für jede Klasse einzeln aufzusplitten.
+
+
+## Implementierung:
+
+### Beispiel 1
 
 ```py
 import dsbapi
@@ -40,7 +50,7 @@ entries = dsbclient.fetch_entries() # Rückgabe einer JSON Liste an Arrays
 print(entries[0]["date"]) # Datum des ersten Eintrags
 ```
 
-#### Beispiel 2: Anderes Tabellenformat
+### Beispiel 2: Anderes Tabellenformat
 Schulen sind relativ frei in der Gestaltung Ihrer Datensätze. Daher kann der oben beschriebene Standard wiefolgt überschrieben werden:
 
 ```py
