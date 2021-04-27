@@ -3,7 +3,7 @@
 DSBApi
 An API for the DSBMobile substitution plan solution, which many schools use.
 """
-__version__ = '0.0.13'
+__version__ = '0.0.14'
 import bs4
 import json
 import requests
@@ -28,6 +28,14 @@ class DSBApi:
         if not isinstance(tablemapper, list):
             raise TypeError('Attribute tablemapper is not of type list!')
         self.tablemapper = tablemapper
+        
+        # loop over tablemapper array and identify the keyword "class". The "class" will have a special operation in split up the datasets
+        self.class_index = None
+        while i < len(self.tablemapper):
+            if self.tablemapper[i] == 'class':
+                self.class_index = i
+                break
+        
 
     def fetch_entries(self):
         """
@@ -122,7 +130,14 @@ class DSBApi:
                 infos = entry.find_all("td")
                 if len(infos) < 2:
                     continue
-                for class_ in infos[1].text.split(", "):
+                
+                # check if a "class" attribute is there, if yes, split the "class" value by "," to spread out the data rows for each school class
+                if self.class_index:
+                    class_array = infos[self.class_index].text.split(", ")
+                else:
+                    # define a dummy value if we don't have a class column (with keyword "class")
+                    class_array = [ '---' ]
+                for class_ in class_array:
                     new_entry = dict()
                     new_entry["date"] = date
                     new_entry["day"]  = day
