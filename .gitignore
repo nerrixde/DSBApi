@@ -1,3 +1,4 @@
 # Eclipse
 .project
 .pydevproject
+.settings/**
