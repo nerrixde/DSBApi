@@ -14,6 +14,13 @@ import gzip
 import uuid
 import base64
 
+try:
+    from PIL import Image
+except:
+    import Image
+import pytesseract
+import requests
+
 class DSBApi:
     def __init__(self, username, password, tablemapper=['type','class','lesson','subject','room','new_subject','new_teacher','teacher']):
         """
@@ -110,6 +117,9 @@ class DSBApi:
         @todo: Future use - implement OCR
         @raise Exception: If the function will be crawled, because the funbtion is not implemented yet
         """
+
+        return None  
+
         raise Exception('Extraction of data from images is not implemented yet!')
         return(list(dict()))
     def fetch_timetable(self, timetableurl):
