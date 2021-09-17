@@ -128,7 +128,7 @@ class DSBApi:
         try:
             return  pytesseract.image_to_string(img)
         except TesseractError:
-            raise("You have to make the tesseract command accessible and work!")
+            raise Exception("You have to make the tesseract command accessible and work!")
             return None
 
     def fetch_timetable(self, timetableurl):
