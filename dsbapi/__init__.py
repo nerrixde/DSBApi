@@ -48,7 +48,7 @@ class DSBApi:
             i += 1
        
 
-    def fetch_entries(self):
+    def fetch_entries(self, images=True):
         """
         Fetch all the DSBMobile entries
         @return: list, containing lists of DSBMobile entries from the tables or only the entries if just one table was received (default: empty list)
@@ -103,7 +103,7 @@ class DSBApi:
         for entry in final:
             if entry.endswith(".htm") and not entry.endswith(".html") and not entry.endswith("news.htm"):
                 output.append(self.fetch_timetable(entry))
-            elif entry.endswith(".jpg"):
+            elif entry.endswith(".jpg") and images == True:
                 output.append(self.fetch_img(entry))
         if len(output) == 1:
             return output[0]
@@ -118,10 +118,19 @@ class DSBApi:
         @raise Exception: If the function will be crawled, because the funbtion is not implemented yet
         """
 
-        return None  
+        try:
+            img = Image.open(io.BytesIO(requests.get(imgurl)))
+        except:
+            return  #haha this is quality coding surplus
 
-        raise Exception('Extraction of data from images is not implemented yet!')
-        return(list(dict()))
+        string = ""
+
+        try:
+            return  pytesseract.image_to_string(img)
+        except TesseractError:
+            raise("You have to make the tesseract command accessible and work!")
+            return None
+
     def fetch_timetable(self, timetableurl):
         """
         parse the timetableurl HTML page and return the parsed entries
