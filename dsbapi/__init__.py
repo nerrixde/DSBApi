@@ -14,6 +14,13 @@ import gzip
 import uuid
 import base64
 
+try:
+    from PIL import Image
+except:
+    import Image
+import pytesseract
+import requests
+
 class DSBApi:
     def __init__(self, username, password, tablemapper=['type','class','lesson','subject','room','new_subject','new_teacher','teacher']):
         """
@@ -41,7 +48,7 @@ class DSBApi:
             i += 1
        
 
-    def fetch_entries(self):
+    def fetch_entries(self, images=True):
         """
         Fetch all the DSBMobile entries
         @return: list, containing lists of DSBMobile entries from the tables or only the entries if just one table was received (default: empty list)
@@ -96,12 +103,22 @@ class DSBApi:
         for entry in final:
             if entry.endswith(".htm") and not entry.endswith(".html") and not entry.endswith("news.htm"):
                 output.append(self.fetch_timetable(entry))
-            elif entry.endswith(".jpg"):
+            elif entry.endswith(".jpg") and images == True:
                 output.append(self.fetch_img(entry))
+
+        final = []
+        for entry in output:
+            if entry is not None:
+                final.append(entry)
+
+        output = final
+
         if len(output) == 1:
             return output[0]
         else:
             return output
+
+
     def fetch_img(self, imgurl):
         """
         Extract data from the image
@@ -110,8 +127,20 @@ class DSBApi:
         @todo: Future use - implement OCR
         @raise Exception: If the function will be crawled, because the funbtion is not implemented yet
         """
-        raise Exception('Extraction of data from images is not implemented yet!')
-        return(list(dict()))
+
+        try:
+            img = Image.open(io.BytesIO(requests.get(imgurl)))
+        except:
+            return  #haha this is quality coding surplus
+
+        string = ""
+
+        try:
+            return  pytesseract.image_to_string(img)
+        except TesseractError:
+            raise Exception("You have to make the tesseract command accessible and work!")
+            return None
+
     def fetch_timetable(self, timetableurl):
         """
         parse the timetableurl HTML page and return the parsed entries
