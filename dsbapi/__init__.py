@@ -105,10 +105,20 @@ class DSBApi:
                 output.append(self.fetch_timetable(entry))
             elif entry.endswith(".jpg") and images == True:
                 output.append(self.fetch_img(entry))
+
+        final = []
+        for entry in output:
+            if entry is not None:
+                final.append(entry)
+
+        output = final
+
         if len(output) == 1:
             return output[0]
         else:
             return output
+
+
     def fetch_img(self, imgurl):
         """
         Extract data from the image
