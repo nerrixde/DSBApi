@@ -1,3 +1,7 @@
+
+## 🔗 Maintainer gesucht: [Mehr erfahren](https://github.com/nerrixDE/DSBApi/issues/24) 
+
+
 # DSBApi
 
 > Eine API für die DSBMobile Vertretungsplan-Lösung, welche viele Schulen benutzen.
