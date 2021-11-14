@@ -97,14 +97,14 @@ for s in range(len(entries)):
                 teacher = entries[s][i]["room"]
                 oldsubject = entries[s][i]["subject"]
                 room = entries[s][i]["new_teacher"]
-                Vertretenvon = entries[s][i]["type"]
+                vertreter = entries[s][i]["type"]
                 text = entries[s][i]["text"]
-                final.append({"lesson":lesson, "new_subject": subject, "room":room, "old_subject":oldsubject, "teacher":teacher, "type":Vertretenvon, "text":text})
+                final.append({"lesson":lesson, "new_subject": subject, "room":room, "old_subject":oldsubject, "teacher":teacher, "type":vertreter, "text":text})
 
-string = "Am "+day+" gibt es "+str(len(final))+" einträge. "
-for s in range(len(final)):
-    string = string+"In der "+final[s]["lesson"]+" Stunde hast du "+final[s]["new_subject"]+" mit "+final[s]["teacher"]+" in "+final[s]["room"]+". "
-print(string)
+message = f"Am {day} gibt es {str(len(final))} Einträge. "
+for s in final:
+    message += f"In der {s['lesson']}. Stunde hast du {s['new_subject']} mit {s['teacher']} in {s['room']}. "
+print(message)
                 
 
 ```
