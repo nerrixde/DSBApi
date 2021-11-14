@@ -70,7 +70,6 @@ entries = dsbclient.fetch_entries()
 for s in range(len(entries)):
   for i in range(len(entries[s])):
     print(entries[s][i]["date"])
-
 ```
 
 ### Beispiel 3: Nützliches Beispiel
