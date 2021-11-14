@@ -1,22 +1,20 @@
 
-## 🔗 Maintainer gesucht: [Mehr erfahren](https://github.com/nerrixDE/DSBApi/issues/24) 
-
-
 # DSBApi
 
 > Eine API für die DSBMobile Vertretungsplan-Lösung, welche viele Schulen benutzen.
 
-* Python 3
-* Funktioniert Stand 02.10.2020 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
+* Funktioniert Stand 10.11.21 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
 * Aktuell in Version 0.0.14
 * Aktuell stable
 * Units 2020 nicht vollständig unterstützt, PRs welcome, aber Kompatibilität berücksichtigen!
 
+Bei Problemen und/oder Fragen, gerne ein "Issue" eröffnen. 
+
 ## Installation:
 
-`pip3 install dsbapipy`
-
-oder manuell vom Source Code.
+`pip install dsbapipy`
+oder manuell:
+`pip install git+https://github.com/nerrixDE/DSBApi.git#egg=dsbapipy`
 
 ## Datensatz:
 
@@ -49,9 +47,13 @@ Diese Teilung wird verwendet um bei kombinierten Klasseneinträgen, die Daten f�
 ```py
 import dsbapi
 
-dsbclient = dsbapi.DSBApi("username", "password")
-entries = dsbclient.fetch_entries() # Rückgabe einer JSON Liste an Arrays
-print(entries[0]["date"]) # Datum des ersten Eintrags
+dsbclient = dsbapipy.DSBApi("benutzername", "passwort")
+entries = dsbclient.fetch_entries()
+
+for s in range(len(entries)):
+  for i in range(len(entries[s])):
+    print(entries[s][i]["date"])
+
 ```
 
 ### Beispiel 2: Anderes Tabellenformat
@@ -62,7 +64,47 @@ import dsbapi
 
 ownFields = ['class','lesson','new_subject','room','subject','new_teacher','type','text']
 
-dsbclient = dsbapi.DSBApi("username", "password", tablemapper=ownFields)
-entries = dsbclient.fetch_entries() # Rückgabe einer JSON Liste an Arrays
-print(entries[0]["date"]) # Datum des ersten Eintrags
+dsbclient = dsbapipy.DSBApi("benutzername", "passwort", tablemapper=ownFields)
+entries = dsbclient.fetch_entries()
+
+for s in range(len(entries)):
+  for i in range(len(entries[s])):
+    print(entries[s][i]["date"])
+```
+
+### Beispiel 3: Nützliches Beispiel
+Ein real-world Beispiel:
+
+```py
+import dsbapi as dsbapipy
+import json
+import datetime
+
+days = ["Montag","Dienstag","Mittwoch","Donnerstag","Freitag", "Samstag","Sonntag"]
+klasse = "10b
+ownFields = ['class','lesson','new_subject','room','subject','new_teacher','type','text']
+dsbclient = dsbapipy.DSBApi("benutzername", "passwort", tablemapper=ownFields)
+entries  dsbclient.fetch_entries()
+final = []
+
+for s in range(len(entries)):
+    for i in range(len(entries[s])):
+        day = days[datetime.datetime.today().weekday() +1]
+        if entries[s][i]["class"] == klasse:
+            if entries[s][i]["day"] == day:
+                lesson = entries[s][i]["lesson"]
+                subject = entries[s][i]["new_subject"]
+                teacher = entries[s][i]["room"]
+                oldsubject = entries[s][i]["subject"]
+                room = entries[s][i]["new_teacher"]
+                vertreter = entries[s][i]["type"]
+                text = entries[s][i]["text"]
+                final.append({"lesson":lesson, "new_subject": subject, "room":room, "old_subject":oldsubject, "teacher":teacher, "type":vertreter, "text":text})
+
+message = f"Am {day} gibt es {str(len(final))} Einträge. "
+for s in final:
+    message += f"In der {s['lesson']}. Stunde hast du {s['new_subject']} mit {s['teacher']} in {s['room']}. "
+print(message)
+                
+
 ```
