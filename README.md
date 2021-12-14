@@ -1,6 +1,6 @@
 
 # DSBApi
-
+### ⚠️ Unzuverlässig. Es scheinen Bugs vermehrt aufzutreten. Maintainer gesucht ([#24](https://github.com/nerrixDE/DSBApi/issues/24))
 > Eine API für die DSBMobile Vertretungsplan-Lösung, welche viele Schulen benutzen.
 
 * Funktioniert Stand 10.11.21 (Jetzt via Android-API (nach Problemen in 0.0.3), seit 2015 stable
