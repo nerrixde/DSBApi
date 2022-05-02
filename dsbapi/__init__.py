@@ -19,7 +19,6 @@ try:
 except:
     import Image
 import pytesseract
-import requests
 
 class DSBApi:
     def __init__(self, username, password, tablemapper=['type','class','lesson','subject','room','new_subject','new_teacher','teacher']):

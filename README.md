@@ -45,7 +45,7 @@ Diese Teilung wird verwendet um bei kombinierten Klasseneinträgen, die Daten f�
 ### Beispiel 1
 
 ```py
-import dsbapi
+import dsbapi as dsbapipy
 
 dsbclient = dsbapipy.DSBApi("benutzername", "passwort")
 entries = dsbclient.fetch_entries()
@@ -60,7 +60,7 @@ for s in range(len(entries)):
 Schulen sind relativ frei in der Gestaltung Ihrer Datensätze. Daher kann der oben beschriebene Standard wiefolgt überschrieben werden:
 
 ```py
-import dsbapi
+import dsbapi as dsbapipy
 
 ownFields = ['class','lesson','new_subject','room','subject','new_teacher','type','text']
 
